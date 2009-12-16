@@ -1,0 +1,4 @@
+name = Motionsplan Blocks
+description = Different blocks used at motionsplan.dk
+package = Motionsplan
+core = 6.x
