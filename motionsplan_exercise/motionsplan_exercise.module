@@ -1,0 +1,3 @@
+<?php
+
+include_once('motionsplan_exercise.features.inc');
