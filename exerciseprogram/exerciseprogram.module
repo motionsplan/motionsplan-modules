@@ -373,8 +373,7 @@ function exerciseprogram_print_compact() {
 			</td>
 			<td width="20%">
 				<?php
-				//echo $e->field_exercise_intro[0]['value'];
-				echo $e->field_exercise_guide[0]['value'];
+				echo $e->field_exercise_intro[0]['value'];
 				?>
 			</td>
 			<td width="10%" style="text-align:center;">
