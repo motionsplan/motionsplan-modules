@@ -1,0 +1,136 @@
+<?php
+
+/**
+ * Implementation of hook_menu()
+ */ 
+function motionsplan_exercise_pdf_menu() {
+    $items['node/%node/pdf'] = array(
+        'title' => 'PDF',
+        'page callback' => 'exercise_pdf',
+        'page arguments' => array(1),
+        'type' => MENU_LOCAL_TASK,
+        'access callback' => true
+    );
+  
+    return $items;
+}
+
+/**
+ * Creates a pdf of an exercise node
+ * 
+ * @param $nid Node id
+ *
+ * @return void
+ */
+function exercise_pdf($node) {
+    global $base_url;
+    require_once 'fpdf.php';
+
+    $title = utf8_decode($node->title);
+    $description = utf8_decode(strip_tags($node->field_exercise_intro[0]['value']));
+    $keywords = array();
+    foreach ($node->taxonomy as $taxonomy) {
+        $keywords[] = $taxonomy->name;
+    }
+
+    $url = $base_url. '/node/' . $node->nid;
+
+    $pdf = new FPDF('L','mm','A4');
+    $pdf->SetTitle($title);
+    $pdf->SetSubject('');
+    $pdf->SetAuthor('Motionsplan.dk');
+    $pdf->SetAutoPageBreak(false);
+
+    $pdf->AddPage();
+    $pdf->SetFont('Helvetica', 'B', 26);
+    $pdf->setTextColor(255, 255, 255);
+    $pdf->Cell(0, 22, $title, null, 2, 'C', true);
+
+    $pdf->SetFont('Helvetica', null, 17);
+    $pdf->setTextColor(0, 0, 0);
+    $pdf->setY(40);
+
+    $pdf->MultiCell(200, 8, $description, 0);
+
+    if (!empty($node->field_exercise_images)) {
+        $x = 10;
+        $y = 80;
+        $width = 0;
+        $spacing = 5;
+        $count = 0;
+        foreach ($node->field_exercise_images as $image) {
+            $file = realpath(dirname(__FILE__) . '/../../../../../' . $image['filepath']);
+            $size = getimagesize($file);
+            if ($size[0] < $size[1]) {
+                // portrait
+                $pic_width = 35;
+                $new_line = 60;
+                if ($count > 10) {
+                    break;
+                }
+            } else {
+                // landscape
+                $pic_width = 55;
+                $new_line = 50;
+                if ($count > 6) {
+                    break;
+                }
+            }
+            $width += $pic_width + $spacing;
+
+            if ($width > 200) {
+                $y += $new_line;
+                $x = 10;
+            }
+
+            $pdf->Image($file,$x,$y,$pic_width,0,'');
+            $x += $pic_width + $spacing;
+        }
+    }
+
+    //$pdf->Line(10, 165, 220, 165);
+    $pdf->Line(220, 30, 220, 220);
+
+    $pdf->Image(dirname(__FILE__) . '/vih_logo.jpg',240,120,32,0,'', 'http://vih.dk/');
+    $pdf->Image(dirname(__FILE__) . '/../../../themes/motionsplan/logo.png',235,180,50,0,'', 'http://motionsplan.dk/');
+
+    $pdf->Image(dirname(__FILE__) . '/cc-by-sa_340x340.png',12,12,17,0,'');
+
+
+    $pdf->setY(168);
+    $pdf->SetFont('Helvetica', null, 10);
+
+    $pdf->setY(40);
+    $pdf->setX(233);
+
+    $pdf->MultiCell(40, 5, utf8_decode(implode($keywords, "\n")), 0, 'C');
+
+    $pdf->SetFont('Helvetica', null, 8);
+    $pdf->setY(190);
+    $pdf->setX(230);
+    $pdf->MultiCell(60, 8, $url, 0, 'C');
+
+    $image_url = "http://chart.apis.google.com/chart?cht=qr&chs=100x100&chl=" . $url;
+  
+    $ch = curl_init();
+    $timeout = 0;
+    curl_setopt ($ch, CURLOPT_URL, $image_url);
+    curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+
+    // Getting binary data
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+
+    $image = curl_exec($ch);
+
+    curl_close($ch);
+
+    $f = fopen(dirname(__FILE__) . '/barcodes/'. md5(request_uri()) . '.png', 'w');
+    fwrite($f, $image);
+    fclose($f);
+
+    $pdf->Image(dirname(__FILE__) . '/barcodes/' . md5(request_uri()) . '.png', 235, 135, 45, 0, '');
+
+    $pdf->Output();
+}
+
