@@ -164,7 +164,7 @@ function exercise_pdf_portrait($node) {
     global $base_url;
     require_once 'fpdf.php';
 
-    $title = utf8_decode($node->title);
+    $title = "  " . utf8_decode($node->title);
     $description = utf8_decode(strip_tags($node->field_exercise_intro[0]['value']));
     $keywords = array();
     foreach ($node->taxonomy as $taxonomy) {
@@ -181,9 +181,22 @@ function exercise_pdf_portrait($node) {
     $pdf->SetMargins(0, 0, 0);    
 
     $pdf->AddPage();
-    $pdf->SetFont('Helvetica', 'B', 30);
-    $pdf->setTextColor(255, 255, 255);
-    $pdf->Cell(0, 50, "\n    " . $title, null, 2, 'L', true);
+
+    $title_size = 30;
+
+    $pdf->SetFont('Helvetica', 'B', $title_size);
+
+    $title_width = $pdf->GetStringWidth($title);
+    
+    if ($title_width > 200) {
+        $title_size = 25;
+    }
+    
+    $pdf->SetFont('Helvetica', 'B', $title_size);
+
+    $pdf->SetFont('Helvetica', 'B', $title_size);
+    $pdf->SetTextColor(255, 255, 255);
+    $pdf->Cell(0, 50, $title, null, 2, 'L', true);
     
     $pdf->SetLeftMargin(10);
     $pdf->SetRightMargin(10);
@@ -234,13 +247,13 @@ function exercise_pdf_portrait($node) {
     $pdf->setTextColor(0, 0, 0);
 
     if ($orientation == 'portrait') {
-        if ($rows == 1) {
-            $pdf->setY(100);
+        if ($picture_rows == 1) {
+            $pdf->setY(150);
         } else {
             $pdf->setY(230);
         }
     } else {
-        if ($rows == 1) {
+        if ($picture_rows == 1) {
             $pdf->setY(90);
         } else {
             $pdf->setY(200);
