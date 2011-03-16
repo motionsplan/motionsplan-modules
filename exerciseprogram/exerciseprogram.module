@@ -591,8 +591,8 @@ function exerciseprogram_get_public_list() {
             WHERE public = 1 ORDER BY name";
     $res = db_query($sql);
     while($r = db_fetch_array($res)) {
-        $sql = "SELECT COUNT(DISTINCT nid) FROM {exercise_exercises}
-                    WHERE pid = '".$r['pid']."'";
+        $sql = "SELECT COUNT(DISTINCT e.nid) FROM {exercise_exercises} e, {node} n
+                    WHERE e.pid = '".$r['pid']."' AND n.nid = e.nid AND n.status = 1 AND n.type = 'exercise'";
         $noe = db_result(db_query($sql));
             
         $list[] = array('name'=>$r['name'],'desc'=>$r['descr'],
@@ -641,8 +641,8 @@ function exerciseprogram_get_users_exercises() {
             WHERE uid = '".$user->uid."' OR uid_coach = '".$user->uid."' ORDER BY name";
         $res = db_query($sql);
         while($r = db_fetch_array($res)) {
-            $sql = "SELECT COUNT(DISTINCT nid) FROM {exercise_exercises}
-                    WHERE pid = '".$r['pid']."'";
+            $sql = "SELECT COUNT(DISTINCT e.nid) FROM {exercise_exercises} e, {node} n
+                    WHERE e.pid = '".$r['pid']."' AND n.nid = e.nid AND n.status = 1 AND n.type = 'exercise'";
             $noe = db_result(db_query($sql));
             
             $exerciseList[] = array('name'=>$r['name'],'desc'=>$r['descr'],
