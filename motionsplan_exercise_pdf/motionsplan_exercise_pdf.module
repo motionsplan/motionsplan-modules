@@ -10,16 +10,24 @@ function motionsplan_exercise_pdf_menu() {
         'page callback' => 'exercise_pdf',
         'page arguments' => array(1),
         'type' => MENU_LOCAL_TASK,
-        'access callback' => true
+        'access callback' => 'exercise_pdf_access',
+        'access arguments' => array(1)
     );
     $items['exerciseprogram/print_compact/%/pdf'] = array(
         'title' => t('PDF'),
         'page callback' => 'exerciseprogram_print_compact_pdf',
         'page arguments' => array(2),
         'access callback' => true,
-        'type' => MENU_LOCAL_TASK,
+        'type' => MENU_CALLBACK,
     );    
     return $items;
+}
+
+function exercise_pdf_access($node) {
+    if ($node->type != 'exercise') {
+        return false;
+    }
+    return true;
 }
 
 /**
