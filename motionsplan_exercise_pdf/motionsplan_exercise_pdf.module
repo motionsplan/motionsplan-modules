@@ -13,17 +13,11 @@ function motionsplan_exercise_pdf_menu() {
         'access callback' => true
     );
     $items['exerciseprogram/print_compact/%/pdf'] = array(
-
-	   'title' => t('PDF'),
-
-	   'page callback' => 'exerciseprogram_print_compact_pdf',
-
-	   'page arguments' => array(2),
-
-	   'access callback' => true,
-
-	   'type' => MENU_LOCAL_TASK,
-
+        'title' => t('PDF'),
+        'page callback' => 'exerciseprogram_print_compact_pdf',
+        'page arguments' => array(2),
+        'access callback' => true,
+        'type' => MENU_LOCAL_TASK,
     );    
     return $items;
 }
@@ -99,15 +93,12 @@ function exercise_pdf($node) {
             $x += $pic_width + $spacing;
         }
     }
-
-    //$pdf->Line(10, 165, 220, 165);
     $pdf->Line(220, 30, 220, 220);
 
     $pdf->Image(dirname(__FILE__) . '/vih_logo.jpg',240,120,32,0,'', 'http://vih.dk/');
     $pdf->Image(dirname(__FILE__) . '/../../../themes/motionsplan/logo.png',235,180,50,0,'', 'http://motionsplan.dk/');
 
     $pdf->Image(dirname(__FILE__) . '/cc-by-sa_340x340.png',12,12,17,0,'');
-
 
     $pdf->setY(168);
     $pdf->SetFont('Helvetica', null, 10);
@@ -152,15 +143,19 @@ class PDF_MC_Table extends FPDF
     var $aligns;
     var $imgs;
 
+    /**
+     * Set the array of column width
+     */
     function SetWidths($w)
     {
-        //Set the array of column widths
         $this->widths=$w;
     }
 
+    /**
+     * Set the array of column alignments
+     */
     function SetAligns($a)
     {
-        //Set the array of column alignments
         $this->aligns=$a;
     }
 
@@ -310,4 +305,3 @@ function exerciseprogram_print_compact_pdf() {
 
     $pdf->Output();
 }
-
