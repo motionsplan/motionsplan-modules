@@ -12,7 +12,19 @@ function motionsplan_exercise_pdf_menu() {
         'type' => MENU_LOCAL_TASK,
         'access callback' => true
     );
-  
+    $items['exerciseprogram/print_compact/%/pdf'] = array(
+
+	   'title' => t('PDF'),
+
+	   'page callback' => 'exerciseprogram_print_compact_pdf',
+
+	   'page arguments' => array(2),
+
+	   'access callback' => true,
+
+	   'type' => MENU_LOCAL_TASK,
+
+    );    
     return $items;
 }
 
