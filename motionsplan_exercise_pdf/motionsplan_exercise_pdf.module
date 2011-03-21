@@ -35,7 +35,7 @@ class PDF_MC_Table extends FPDF
         $h=5*$nb;
 
 
-        if ($first_col = $this->NbLines($data[0]) * 5 + $pic_height >= $h AND !empty($pics)) {
+        if ($first_col = $this->NbLines($this->widths[$i], $data[0]) * 5 + $pic_height >= $h AND !empty($pics)) {
             $h = $first_col * 5 + $pic_height + 6;
         }
 
