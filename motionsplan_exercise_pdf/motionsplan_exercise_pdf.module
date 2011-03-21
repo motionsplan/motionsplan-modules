@@ -284,9 +284,7 @@ function exercise_pdf_portrait($node) {
 
     $pdf->MultiCell(0, 8, $description, 0);
 
-    // $pdf->Image(dirname(__FILE__) . '/vih_logo.jpg',240,120,32,0,'', 'http://vih.dk/');
     $pdf->Image(dirname(__FILE__) . '/../../../themes/motionsplan/logo.png',8,270,50,0,'', 'http://motionsplan.dk/');
-
     $pdf->Image(dirname(__FILE__) . '/cc-by-sa_340x340.png',190,3,17,0,'');
 
     $pdf->SetFont('Helvetica', null, 8);
@@ -455,13 +453,12 @@ function exerciseprogram_print_compact_pdf() {
     $pdf->SetAutoPageBreak(false);
 
     $pdf->AddPage();
-    $pdf->SetFont('Helvetica', 'B', 26);
-    $pdf->setTextColor(255, 255, 255);
-    $pdf->Cell(0, 22, $title, null, 2, 'C', true);
+    $pdf->SetFont('Helvetica', 'B', 20);
+    $pdf->Cell(0, 10, $title, null, 2, 'L', false);
+    $pdf->Image(dirname(__FILE__) . '/../../../themes/motionsplan/logo.png',150,8,50,0,'', 'http://motionsplan.dk/');
 
     $pdf->SetFont('Helvetica', null, 12);
     $pdf->setTextColor(0, 0, 0);
-    $pdf->setY(40);
 
     $pdf->MultiCell(180, 6, $description, 0);
 
