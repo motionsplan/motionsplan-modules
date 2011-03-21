@@ -440,7 +440,7 @@ function exerciseprogram_print_compact_pdf() {
         return '<strong>Du skal tilføje øvelser for at kunne udskrive</strong>';
     }
     
-    $sql = "SELECT name, description FROM {exercise_program} WHERE status = 1 AND pid = %d";
+    $sql = "SELECT name, description FROM {exercise_program} WHERE pid = %d";
     $r = db_fetch_array(db_query($sql,arg(2)));
 
     $title = utf8_decode($r['name']);
