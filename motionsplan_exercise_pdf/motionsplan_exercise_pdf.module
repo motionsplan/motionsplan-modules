@@ -110,8 +110,8 @@ class PDF_MC_Table extends FPDF
             } else {
                 $i++;
             }
-            return $nl;
         }
+        return $nl;
     }
 
 }
