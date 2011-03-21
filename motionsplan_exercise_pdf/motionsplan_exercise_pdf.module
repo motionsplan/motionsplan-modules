@@ -36,7 +36,7 @@ class PDF_MC_Table extends FPDF
 
 
         if ($first_col = $this->NbLines($data[0]) * 5 + $pic_height >= $h AND !empty($pics)) {
-            $h = $first_col * 5 + $pic_height + 5;
+            $h = $first_col * 5 + $pic_height + 6;
         }
 
         //Issue a page break first if needed
@@ -53,7 +53,7 @@ class PDF_MC_Table extends FPDF
             //Print the text
             $this->MultiCell($w,5,$data[$i],0,$a);
 
-            $calc_x = $x;
+            $calc_x = $x + 1;
             $calc_y = $this->GetY();
             if (!empty($pics)) {
                 if ($i==0) {
@@ -456,16 +456,17 @@ function exerciseprogram_print_compact_pdf() {
     $pdf->SetFont('Helvetica', 'B', 20);
     $pdf->Cell(0, 10, $title, null, 2, 'L', false);
     $pdf->Image(dirname(__FILE__) . '/../../../themes/motionsplan/logo.png',150,8,50,0,'', 'http://motionsplan.dk/');
-
-    $pdf->SetFont('Helvetica', null, 12);
     $pdf->setTextColor(0, 0, 0);
 
+    $pdf->SetFont('Helvetica', null, 10);
     $pdf->MultiCell(180, 6, $description, 0);
 
+    $pdf->SetY($pdf->GetY()+2);
+
+    // table starts
     $pdf->SetWidths(array(50,70,70));
-
+    $pdf->SetFont('Helvetica', 'B', 10);
     $pdf->Row(array(utf8_decode('Øvelse'), utf8_decode('Beskrivelse'), utf8_decode('Kommentar')));
-
     $pdf->SetFont('Helvetica', null, 10);
     foreach($nids as $no => $eid) {
         $e = node_load($eid);
