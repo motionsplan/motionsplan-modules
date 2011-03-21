@@ -264,7 +264,7 @@ function exerciseprogram_show_public() {
     $output .= '<p>'.$r['description'].'</p>';
     $output .= '<p>';
     $output .= '<input type="button" class="form-submit" onclick="window.open(\'/exerciseprogram/print/'.arg(2).'\',null)" value="Udskriv printervenlig udgave" />';
-	$output .= ' <input type="button" class="form-submit" onclick="window.open(\'/exerciseprogram/print_compact/'.arg(2).'\',null)" value="Udskriv kompakt version" />';
+	$output .= ' <input type="button" class="form-submit" onclick="window.open(\'/exerciseprogram/print_compact/'.arg(2).'/pdf\',null)" value="Udskriv kompakt version" />';
     $output .= '</p>';
     
     foreach($nids as $eid) {
