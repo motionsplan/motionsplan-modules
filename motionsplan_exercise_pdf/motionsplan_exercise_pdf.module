@@ -276,7 +276,7 @@ function exercise_pdf_portrait($node) {
         }
     } else {
         if ($picture_rows == 1) {
-            $pdf->setY(90);
+            $pdf->setY(125);
         } else {
             $pdf->setY(200);
         }
