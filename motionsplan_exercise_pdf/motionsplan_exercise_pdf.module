@@ -1,5 +1,5 @@
 <?php
-require_once 'fpdf.php';
+require_once libraries_get_path('fpdf') . '/FPDF-1.6.0/fpdf.php';
 
 class PDF_MC_Table extends FPDF
 {
@@ -184,7 +184,7 @@ function exercise_pdf_access($node) {
  */
 function exercise_pdf_portrait($node) {
     global $base_url;
-    require_once 'fpdf.php';
+    require_once libraries_get_path('fpdf') . '/FPDF-1.6.0/fpdf.php';
 
     $title = "  " . utf8_decode($node->title);
     $description = utf8_decode(strip_tags($node->field_exercise_intro[0]['value']));
@@ -325,7 +325,7 @@ function exercise_pdf_portrait($node) {
  */
 function exercise_pdf_landscape($node) {
     global $base_url;
-    require_once 'fpdf.php';
+    require_once libraries_get_path('fpdf') . '/FPDF-1.6.0/fpdf.php';
 
     $title = utf8_decode($node->title);
     $description = utf8_decode(strip_tags($node->field_exercise_intro[0]['value']));
@@ -468,13 +468,23 @@ function exerciseprogram_print_compact_pdf() {
     $pdf->SetFont('Helvetica', 'B', 10);
     $pdf->Row(array(utf8_decode('Øvelse'), utf8_decode('Beskrivelse'), utf8_decode('Kommentar')));
     $pdf->SetFont('Helvetica', null, 10);
+
+    $presetname = 'exercisePictureCompact';
+    $preset = imagecache_preset_by_name($presetname);
+
     foreach($nids as $no => $eid) {
         $e = node_load($eid);
 
 	$imgs = array();
 	foreach($e->field_exercise_images as $img) {
-            if (empty($img['filepath'])) { continue; }
-            $imgs[] = dirname(__FILE__) . '/../../../../../' . str_replace('/files/','/files/imagecache/exercisePictureCompact/', $img['filepath']);
+            if (empty($img['filepath'])) { 
+                continue; 
+            }
+            $src = $img["filepath"];
+            $dst = imagecache_create_path($presetname, $src);
+            if (file_exists($dst) || imagecache_build_derivative($preset['actions'], $src, $dst)) {
+                $imgs[] = $dst;
+            }
         }
 	if (sizeof($imgs) > 3) {
             $tmp_imgs = array();
