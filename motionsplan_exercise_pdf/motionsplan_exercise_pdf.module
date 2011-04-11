@@ -246,7 +246,7 @@ function exercise_pdf_portrait($node) {
             } else {
                 $orientation = 'landscape';
                 $pic_width = 80;
-                $new_line = 50;
+                $new_line = 68;
                 if ($count > 4) {
                     break;
                 }
@@ -276,9 +276,9 @@ function exercise_pdf_portrait($node) {
         }
     } else {
         if ($picture_rows == 1) {
-            $pdf->setY(90);
+            $pdf->setY(125);
         } else {
-            $pdf->setY(200);
+            $pdf->setY(195);
         }
     }
 
