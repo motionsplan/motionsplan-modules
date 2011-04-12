@@ -226,34 +226,39 @@ class ExercisePdfPortrait extends FPDF
             $count = 0;
             $picture_rows = 1;
             foreach ($node->field_exercise_images as $image) {
-                $file = realpath(dirname(__FILE__) . '/../../../../../' . $image['filepath']);
-                $size = getimagesize($file);
-                if ($size[0] < $size[1]) {
-                    $orientation = 'portrait';
-                    $pic_width = 55;
-                    $new_line = 80;
-                    if ($count > 6) {
-                        break;
+                $src = $image["filepath"];
+                $dst = imagecache_create_path($presetname, $src);
+                if (file_exists($dst) || imagecache_build_derivative($preset['actions'], $src, $dst)) {
+                    $file = $dst;
+
+                    $size = getimagesize($file);
+                    if ($size[0] < $size[1]) {
+                        $orientation = 'portrait';
+                        $pic_width = 55;
+                        $new_line = 80;
+                        if ($count > 6) {
+                            break;
+                        }
+                    } else {
+                        $orientation = 'landscape';
+                        $pic_width = 80;
+                        $new_line = 68;
+                        if ($count > 4) {
+                            break;
+                        }
                     }
-                } else {
-                    $orientation = 'landscape';
-                    $pic_width = 80;
-                    $new_line = 68;
-                    if ($count > 4) {
-                        break;
+                    $width += $pic_width + $spacing;
+        
+                    if ($width > 200) {
+                        $y += $new_line;
+                        $x = 10;
+                        $picture_rows++;
+                        $width = 0;
                     }
+                    
+                    $this->Image($file,$x,$y,$pic_width,0,'');
+                    $x += $pic_width + $spacing;
                 }
-                $width += $pic_width + $spacing;
-    
-                if ($width > 200) {
-                    $y += $new_line;
-                    $x = 10;
-                    $picture_rows++;
-                    $width = 0;
-                }
-    
-                $this->Image($file,$x,$y,$pic_width,0,'');
-                $x += $pic_width + $spacing;
             }
         }
     
@@ -262,13 +267,13 @@ class ExercisePdfPortrait extends FPDF
 
         if ($orientation == 'portrait') {
             if ($picture_rows == 1) {
-                $pdf->setY(150);
+                $this->setY(150);
             } else {
-                $pdf->setY(230);
+                $this->setY(230);
             }
         } else {
             if ($picture_rows == 1) {
-                $pdf->setY(125);
+                $this->setY(125);
             } else {
                 $this->setY(195);
             }
@@ -344,33 +349,40 @@ class ExercisePdfLandscape extends FPDF
             $width = 0;
             $spacing = 5;
             $count = 0;
+            $presetname = 'exercisePdf';
             foreach ($node->field_exercise_images as $image) {
-                $file = realpath(dirname(__FILE__) . '/../../../../../' . $image['filepath']);
-                $size = getimagesize($file);
-                if ($size[0] < $size[1]) {
-                    // portrait
-                    $pic_width = 35;
-                    $new_line = 60;
-                    if ($count > 10) {
-                        break;
+                $src = $image["filepath"];
+                $dst = imagecache_create_path($presetname, $src);
+                if (file_exists($dst) || imagecache_build_derivative($preset['actions'], $src, $dst)) {
+                    $file = $dst;
+            
+                    $size = getimagesize($file);
+                    if ($size[0] < $size[1]) {
+                        // portrait
+                        $pic_width = 35;
+                        $new_line = 60;
+                        if ($count > 10) {
+                            break;
+                        }
+                    } else {
+                        // landscape
+                        $pic_width = 55;
+                        $new_line = 50;
+                        if ($count > 6) {
+                            break;
+                        }
                     }
-                } else {
-                    // landscape
-                    $pic_width = 55;
-                    $new_line = 50;
-                    if ($count > 6) {
-                        break;
+                    $width += $pic_width + $spacing;
+    
+                    if ($width > 200) {
+                        $y += $new_line;
+                        $x = 10;
                     }
-                }
-                $width += $pic_width + $spacing;
     
-                if ($width > 200) {
-                    $y += $new_line;
-                    $x = 10;
-                }
-    
-                $this->Image($file,$x,$y,$pic_width,0,'');
-                $x += $pic_width + $spacing;
+                    $this->Image($file,$x,$y,$pic_width,0,'');
+                    $x += $pic_width + $spacing;
+                }            
+            
             }
         }
     
