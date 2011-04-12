@@ -294,6 +294,7 @@ class ExerciseAdvancedPdfPortrait extends Fpdf
         $this->MultiCell(0, 6, strip_tags(str_replace("\n","\n\n",$description)), 0);
 
         $this->Image(dirname(__FILE__) . '/../../../themes/motionsplan/logo.png',8,270,50,0,'', 'http://motionsplan.dk/');
+        $this->Image(dirname(__FILE__) . '/vih_logo.jpg',80,268,45,0,'', 'http://motionsplan.dk/');        
         $this->Image(dirname(__FILE__) . '/cc-by-sa_340x340.png',190,3,17,0,'');
 
         $this->SetFont('Helvetica', null, 8);
@@ -434,6 +435,7 @@ class ExercisePdfPortrait extends FPDF
         $this->MultiCell(0, 8, $description, 0);
 
         $this->Image(dirname(__FILE__) . '/../../../themes/motionsplan/logo.png',8,270,50,0,'', 'http://motionsplan.dk/');
+        $this->Image(dirname(__FILE__) . '/vih_logo.jpg',80,268,45,0,'', 'http://motionsplan.dk/');        
         $this->Image(dirname(__FILE__) . '/cc-by-sa_340x340.png',190,3,17,0,'');
 
         $this->SetFont('Helvetica', null, 8);
