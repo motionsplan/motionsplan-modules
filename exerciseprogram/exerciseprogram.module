@@ -145,7 +145,7 @@ function exerciseprogram_addToProgram_form() {
     
     $form['submit'] = array (
         '#type' => 'submit',
-        '#value' => 'Tilføj til træningsprogram',
+        '#value' => 'Tilføj',
     );
     return $form;
 }
@@ -160,21 +160,21 @@ function exerciseprogram_addToProgram_form_submit($form, &$form_state) {
 function exerciseprogram_addToProgram_block() {
     global $user;
     if(empty($user->uid) || arg(0) != 'node' || arg(2) != '') {
-	return array();
+	    return array();
     }
     $sql = "SELECT type FROM {node} WHERE nid = %d";
     $type = db_result(db_query($sql,arg(1)));
     if($type != 'exercise') {
-	return array();
+    	return array();
     }
     $sql = "SELECT COUNT(pid) FROM {exercise_program} WHERE uid = %d OR uid_coach = %d ORDER BY name";
     $num = db_result(db_query($sql,$user->uid,$user->uid));
     
     $content = '<p>Du har ingen træningsprogrammer.</p><p>'.l('Opret et træningsprogram','exerciseprogram/list').'</p>';
-    if($num>0) {
-	$content = drupal_get_form('exerciseprogram_addToProgram_form');
+    if ($num > 0) {
+	    $content = drupal_get_form('exerciseprogram_addToProgram_form');
     }
-    return array('subject'=>'Træningsprogram','content'=>$content);
+    return array('subject' => 'Træningsprogram', 'content' => $content);
 }
 
 
