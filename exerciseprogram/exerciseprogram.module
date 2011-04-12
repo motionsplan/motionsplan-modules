@@ -237,6 +237,7 @@ function exerciseprogram_show() {
     $output .= '<p>';
     $output .= '<input type="button" class="form-submit" onclick="window.open(\'/exerciseprogram/print/'.arg(2).'\',null)" value="Udskriv printervenlig udgave" />';
     $output .= ' <input type="button" class="form-submit" onclick="window.open(\'/exerciseprogram/print_compact/'.arg(2).'/pdf\',null)" value="Udskriv kompakt version" />';
+	$output .= ' <input type="button" class="form-submit" onclick="window.open(\'/exerciseprogram/print_compact/'.arg(2).'/exercisespdf\',null)" value="Udskriv øvelseskort" />';    
     $output .= '</p>';
     
     $output .= '<p>Du kan tilføje flere træningsøvelser til dit program under de enkelte træningsøvelser i menupunktet "Træningsøvelser".</p>';
@@ -265,6 +266,7 @@ function exerciseprogram_show_public() {
     $output .= '<p>';
     $output .= '<input type="button" class="form-submit" onclick="window.open(\'/exerciseprogram/print/'.arg(2).'\',null)" value="Udskriv printervenlig udgave" />';
 	$output .= ' <input type="button" class="form-submit" onclick="window.open(\'/exerciseprogram/print_compact/'.arg(2).'/pdf\',null)" value="Udskriv kompakt version" />';
+	$output .= ' <input type="button" class="form-submit" onclick="window.open(\'/exerciseprogram/print_compact/'.arg(2).'/exercisespdf\',null)" value="Udskriv øvelseskort" />';	
     $output .= '</p>';
     
     foreach($nids as $eid) {

@@ -164,7 +164,14 @@ function motionsplan_exercise_pdf_menu() {
         'page arguments' => array(2),
         'access callback' => true,
         'type' => MENU_CALLBACK,
-    );    
+    );  
+    $items['exerciseprogram/print_compact/%/exercisespdf'] = array(
+        'title' => t('Exercise PDF cards'),
+        'page callback' => 'exerciseprogram_print_compact_pdf_of_exercises',
+        'page arguments' => array(2),
+        'access callback' => true,
+        'type' => MENU_CALLBACK,
+    );        
     return $items;
 }
 
@@ -186,7 +193,11 @@ class ExercisePdfPortrait extends FPDF
 
     function AddPage($node)
     {
+        global $base_url;
         parent::AddPage();
+        $this->SetMargins(0, 0, 0);  
+        $this->setX(0);
+        $this->setY(0);        
         $title = "  " . utf8_decode($node->title);
         $description = utf8_decode(strip_tags($node->field_exercise_intro[0]['value']));
         $keywords = array();
@@ -322,6 +333,8 @@ class ExercisePdfLandscape extends FPDF
 
     function AddPage($node)
     {
+        global $base_url;
+
         parent::AddPage();
 
         $title = utf8_decode($node->title);
@@ -469,6 +482,27 @@ function exercise_pdf_landscape($node) {
     $pdf->Output($title . '.pdf', 'I');
 }
 
+function exerciseprogram_print_compact_pdf_of_exercises() {
+    global $base_path;
+    $nids = exerciseprogram_get_nids(arg(2));
+    if (sizeof($nids)<=0) {
+        return '<strong>Du skal tilføje øvelser for at kunne udskrive</strong>';
+    }
+    require_once libraries_get_path('fpdf') . '/FPDF-1.6.0/fpdf.php';
+
+    $pdf = new ExercisePdfPortrait();
+    $pdf->SetTitle(utf8_decode('Træningsøvelser'));
+    $pdf->SetSubject('');
+    $pdf->SetAuthor('Motionsplan.dk');
+
+    foreach ($nids as $nid) {
+        $node = node_load($nid);
+        $pdf->AddPage($node);
+    }
+    $pdf->Output();
+
+}
+
 function exerciseprogram_print_compact_pdf() {
     global $base_path;
     $nids = exerciseprogram_get_nids(arg(2));
@@ -511,8 +545,8 @@ function exerciseprogram_print_compact_pdf() {
     foreach($nids as $no => $eid) {
         $e = node_load($eid);
 
-	$imgs = array();
-	foreach($e->field_exercise_images as $img) {
+	    $imgs = array();
+	    foreach($e->field_exercise_images as $img) {
             if (empty($img['filepath'])) { 
                 continue; 
             }
@@ -522,7 +556,7 @@ function exerciseprogram_print_compact_pdf() {
                 $imgs[] = $dst;
             }
         }
-	if (sizeof($imgs) > 3) {
+	    if (sizeof($imgs) > 3) {
             $tmp_imgs = array();
             $tmp_imgs[] = $imgs[0];
             $tmp_imgs[] = $imgs[floor(sizeof($imgs)/2)];
