@@ -1,5 +1,6 @@
 <?php
 require_once libraries_get_path('fpdf') . '/FPDF-1.6.0/fpdf.php';
+require_once libraries_get_path('tcpdf') . '/TCPDF-5.9.074/tcpdf/tcpdf.php';
 
 /**
  * Implementation of hook_menu()
@@ -187,14 +188,13 @@ class ExerciseProgramCompactPdf extends FPDF
         }
         return $nl;
     }
-
 }
 
-class ExerciseAdvancedPdfPortrait extends Fpdf
+class ExerciseAdvancedPdfPortrait extends TCPDF
 {
     function __construct()
     {
-        parent::fpdf('P','mm','A4');
+        parent::__construct('P','mm','A4');
         $this->SetAutoPageBreak(false);
         $this->SetMargins(0, 0, 0);  
         $this->AliasNbPages();        
@@ -207,9 +207,9 @@ class ExerciseAdvancedPdfPortrait extends Fpdf
         $this->SetMargins(0, 0, 0);  
         $this->setX(0);
         $this->setY(0);        
-        $title = "  " . utf8_decode($node->title);
-        $intro = utf8_decode($node->field_exercise_intro[0]['value']);
-        $description = utf8_decode($node->field_exercise_guide[0]['value']);
+        $title = "  " . $node->title;
+        $intro = $node->field_exercise_intro[0]['value'];
+        $description = $node->field_exercise_guide[0]['value'];
 
         $keywords = array();
         foreach ($node->taxonomy as $taxonomy) {
@@ -232,7 +232,7 @@ class ExerciseAdvancedPdfPortrait extends Fpdf
         $this->SetTextColor(0, 0, 0);
 
         $this->SetFont('Helvetica', null, 10);
-        $this->MultiCell(40, 5, utf8_decode(implode($keywords, "\n")), 0, 'C');
+        $this->MultiCell(40, 5, implode($keywords, "\n"), 0, 'C');
 
         if (!empty($node->field_exercise_images)) {
             $x = 10;
@@ -288,11 +288,11 @@ class ExerciseAdvancedPdfPortrait extends Fpdf
         $this->setTextColor(0, 0, 0);
         $this->setY(30);
         $this->setX(70);
-        $this->MultiCell(0, 7, $intro, 0);
-        $this->Ln();
+        $this->MultiCell(0, 7, $intro, 0, 'L');
+        $this->Ln(4);
         $this->SetFont('Helvetica', null, 12);
         $this->setX(70);
-        $this->MultiCell(0, 6, strip_tags(str_replace("\n","\n\n",$description)), 0);
+        $this->MultiCell(0, 6, str_replace("\n",' ',$description), 0, 'L', false, 1, '', '', true, 0, true);
 
         $this->Image(dirname(__FILE__) . '/../../../themes/motionsplan/logo.png',8,270,50,0,'', 'http://motionsplan.dk/');
         $this->Image(dirname(__FILE__) . '/vih_logo.jpg',80,268,45,0,'', 'http://motionsplan.dk/');        
