@@ -662,7 +662,6 @@ function exerciseprogram_print_compact_pdf_of_exercises() {
         $pdf->AddPage($node);
     }
     $pdf->Output();
-
 }
 
 function exerciseprogram_print_compact_pdf() {
@@ -729,5 +728,32 @@ function exerciseprogram_print_compact_pdf() {
         $pdf->Row(array(utf8_decode($e->title), utf8_decode($e->field_exercise_intro[0]['value']), ''), $imgs); 
     }
 
+    $pdf->Output($title . '.pdf', 'I');
+}
+
+function motionsplan_exercise_pdf_node_operations() {
+    $operations = array(
+        'pdf' => array(
+            'label' => t('Print PDF'), 
+            'callback' => 'node_operations_pdf',
+    ));
+    return $operations;
+}
+
+function node_operations_pdf($nodes) {
+    global $base_url;
+
+    $title = utf8_decode('Træningsøvelser');
+    $pdf = new ExerciseAdvancedPdfPortrait();
+    $pdf->SetTitle($title);
+    $pdf->SetSubject('');
+    $pdf->SetAuthor('Motionsplan.dk');
+    foreach ($nodes as $node_id) {
+        $node = node_load($node_id);
+        if ($node->type != 'exercise') {
+            continue;
+        }
+        $pdf->AddPage($node);
+    }
     $pdf->Output($title . '.pdf', 'I');
 }
