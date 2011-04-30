@@ -192,9 +192,9 @@ class ExerciseProgramCompactPdf extends FPDF
 
 class ExerciseAdvancedPdfPortrait extends TCPDF
 {
-    function __construct()
+    function __construct($disccache = false)
     {
-        parent::__construct('P','mm','A4');
+        parent::__construct('P','mm','A4', true, 'UTF-8', $disccache);
         $this->SetAutoPageBreak(false);
         $this->SetMargins(0, 0, 0);  
         $this->AliasNbPages();        
@@ -241,7 +241,7 @@ class ExerciseAdvancedPdfPortrait extends TCPDF
             $spacing = 3;
             $count = 0;
             $picture_rows = 1;
-            $presetname = 'exercisePdf';
+            $presetname = 'exercisePdfAdvanced';
             $preset = imagecache_preset_by_name($presetname);
             $pr_row = 0;
             foreach ($node->field_exercise_images as $image) {
@@ -734,7 +734,7 @@ function exerciseprogram_print_compact_pdf() {
 function motionsplan_exercise_pdf_node_operations() {
     $operations = array(
         'pdf' => array(
-            'label' => t('Print PDF'), 
+            'label' => t('Print PDF (max 10)'), 
             'callback' => 'node_operations_pdf',
     ));
     return $operations;
@@ -743,17 +743,30 @@ function motionsplan_exercise_pdf_node_operations() {
 function node_operations_pdf($nodes) {
     global $base_url;
 
-    $title = utf8_decode('Træningsøvelser');
-    $pdf = new ExerciseAdvancedPdfPortrait();
+    $title = 'Træningsøvelser';
+    $pdf = new ExerciseAdvancedPdfPortrait(false);
     $pdf->SetTitle($title);
     $pdf->SetSubject('');
     $pdf->SetAuthor('Motionsplan.dk');
+    $i = 0;
+    $number = 10;
     foreach ($nodes as $node_id) {
+        if ($i >= $number) {
+            $error = true;
+            break;
+        }
         $node = node_load($node_id);
         if ($node->type != 'exercise') {
             continue;
         }
+        $i++;
         $pdf->AddPage($node);
     }
-    $pdf->Output($title . '.pdf', 'I');
+    if ($error !== true) {
+        $pdf->Output($title . '.pdf', 'D');
+    } else {
+        drupal_set_message(t('Can only print %number pages at a time', array('%number' => $number)), 'error');
+    } 
+    
+    
 }
