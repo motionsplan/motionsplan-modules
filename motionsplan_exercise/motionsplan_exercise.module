@@ -47,27 +47,35 @@ function motionsplan_exercise_filter_process($text, $filter, $format) {
 }
 
 function _motionsplan_exercise_display_embed($matches) {
-  $id = $matches[1];
-  $node = node_load($id);
-  if (!$node) {
-    return '';
+  $ids = explode(',', $matches[1]);
+
+  if (empty($ids)) {
+      return;
   }
-  
-  $output = '<div class="exercistlist"><hr />';
+
+  $output = '<div class="exercistlist">';
   $presetname = 'exercisePictureList';
   $preset = imagecache_preset_by_name($presetname);
 
-  if (!empty($node->field_exercise_images[0]['filepath'])) {
-    $src = $node->field_exercise_images[0]['filepath'];
-    $dst = imagecache_create_path($presetname, $src);
-    if (file_exists($dst) || imagecache_build_derivative($preset['actions'], $src, $dst)) {
-      $file = $dst;        
-      $output .= '<div class="photo"><a href="'.url('node/'.$node->nid).'"><img src="/'.$file.'" alt="" /></a></div>';
+  foreach ($ids as $id) {
+    $node = node_load(intval($id));
+    if (!$node) {
+        continue;
+    }  
+ 
+    $output .= '<div class="exercise">';    
+    if (!empty($node->field_exercise_images[0]['filepath'])) {
+      $src = $node->field_exercise_images[0]['filepath'];
+      $dst = imagecache_create_path($presetname, $src);
+      if (file_exists($dst) || imagecache_build_derivative($preset['actions'], $src, $dst)) {
+        $file = $dst;        
+        $output .= '<div class="photo"><a href="'.url('node/'.$node->nid).'"><img src="/'.$file.'" alt="" /></a></div>';
+      }
     }
+    $output .= '<h2><a href="'. url('node/'.$node->nid) . '">'. check_plain($node->title) .'</a></h2>';
+    $output .= check_markup($node->field_exercise_intro[0]['value'], $node->format, false);
+    $output .= '</div><hr />';
   }
-  $output .= '<h2><a href="'. url('node/'.$node->nid) . '">'. check_plain($node->title) .'</a></h2>';
-  $output .= check_markup($node->field_exercise_intro[0]['value'], $node->format, false);
-  $output .= '<hr />';
   $output .= '</div>';
   return $output;
 }
