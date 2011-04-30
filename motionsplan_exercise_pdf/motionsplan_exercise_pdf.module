@@ -383,9 +383,9 @@ class ExercisePdfPortrait extends FPDF
             foreach ($node->field_exercise_images as $image) {
                 $src = $image["filepath"];
                 $dst = imagecache_create_path($presetname, $src);
+                $count++;                
                 if (file_exists($dst) || imagecache_build_derivative($preset['actions'], $src, $dst)) {
                     $file = $dst;
-
                     $size = getimagesize($file);
                     if ($size[0] < $size[1]) {
                         $orientation = 'portrait';
@@ -413,6 +413,7 @@ class ExercisePdfPortrait extends FPDF
                     
                     $this->Image($file,$x,$y,$pic_width,0,'');
                     $x += $pic_width + $spacing;
+
                 }
             }
         }
@@ -513,8 +514,8 @@ class ExercisePdfLandscape extends FPDF
                 $src = $image["filepath"];
                 $dst = imagecache_create_path($presetname, $src);
                 if (file_exists($dst) || imagecache_build_derivative($preset['actions'], $src, $dst)) {
+                    $count++;
                     $file = $dst;
-            
                     $size = getimagesize($file);
                     if ($size[0] < $size[1]) {
                         // portrait
