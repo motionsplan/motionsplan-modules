@@ -234,7 +234,7 @@ class ExerciseAdvancedPdfPortrait extends TCPDF
         $this->SetFont('Helvetica', null, 10);
         $this->MultiCell(40, 5, implode($keywords, "\n"), 0, 'C');
 
-        if (!empty($node->field_exercise_images)) {
+        if (!empty($node->field_exercise_images[0])) {
             $x = 10;
             $y = 25;
             $width = 0;
@@ -371,7 +371,9 @@ class ExercisePdfPortrait extends FPDF
         $this->SetFont('Helvetica', null, 10);
         $this->MultiCell(0, 5, utf8_decode(implode($keywords, ", ")), 0, 'L');
 
-        if (!empty($node->field_exercise_images)) {
+        $this->setY(60);
+
+        if (!empty($node->field_exercise_images[0])) {
             $x = 10;
             $y = 60;
             $width = 0;
@@ -416,24 +418,23 @@ class ExercisePdfPortrait extends FPDF
 
                 }
             }
+            if ($orientation == 'portrait') {
+                if ($picture_rows == 1) {
+                    $this->setY(150);
+                } else {
+                    $this->setY(230);
+                }
+            } else {
+                if ($picture_rows == 1) {
+                    $this->setY(125);
+                } else {
+                    $this->setY(195);
+                }
+            }            
         }
     
         $this->SetFont('Helvetica', null, 17);
         $this->setTextColor(0, 0, 0);
-
-        if ($orientation == 'portrait') {
-            if ($picture_rows == 1) {
-                $this->setY(150);
-            } else {
-                $this->setY(230);
-            }
-        } else {
-            if ($picture_rows == 1) {
-                $this->setY(125);
-            } else {
-                $this->setY(195);
-            }
-        }
 
         $this->MultiCell(0, 8, $description, 0);
 
@@ -502,7 +503,7 @@ class ExercisePdfLandscape extends FPDF
 
         $this->MultiCell(200, 8, $description, 0);
 
-        if (!empty($node->field_exercise_images)) {
+        if (!empty($node->field_exercise_images[0])) {
             $x = 10;
             $y = 80;
             $width = 0;
