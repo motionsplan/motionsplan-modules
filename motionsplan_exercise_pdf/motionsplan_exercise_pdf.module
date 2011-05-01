@@ -29,7 +29,15 @@ function motionsplan_exercise_pdf_menu() {
         'type' => MENU_LOCAL_TASK,
         'access callback' => 'exercise_pdf_access',
         'access arguments' => array(1)
-    );        
+    );
+    $items['node/%node/print'] = array(
+        'title' => 'PDF',
+        'page callback' => 'article_pdf',
+        'page arguments' => array(1),
+        'type' => MENU_LOCAL_TASK,
+        'access callback' => 'article_pdf_access',
+        'access arguments' => array(1)
+    );            
     $items['exerciseprogram/print_compact/%/pdf'] = array(
         'title' => t('PDF'),
         'page callback' => 'exerciseprogram_print_compact_pdf',
@@ -49,6 +57,13 @@ function motionsplan_exercise_pdf_menu() {
 
 function exercise_pdf_access($node) {
     if ($node->type != 'exercise') {
+        return false;
+    }
+    return true;
+}
+
+function article_pdf_access($node) {
+    if ($node->type != 'story') {
         return false;
     }
     return true;
@@ -589,6 +604,97 @@ class ExercisePdfLandscape extends FPDF
         $this->Image(dirname(__FILE__) . '/barcodes/' . md5(request_uri()) . '.png', 235, 135, 45, 0, '');
     }
 }
+
+class ArticlePdf extends TCPDF
+{
+    protected $node;
+    protected $url;
+
+    function __construct($node)
+    {
+        global $base_url;            
+        parent::__construct('P','mm','A4');
+        $this->SetAutoPageBreak(true, 30);
+        $this->SetMargins(10, 10, 10);  
+        $this->AliasNbPages();        
+        $this->node = $node;
+        
+        $this->url = $base_url. '/node/' . $this->node->nid;        
+    }
+    
+    function Header()
+    {
+    }
+    
+    function Footer()
+    {
+        $this->Image(dirname(__FILE__) . '/../../../themes/motionsplan/logo.png',8,275,50,0,'', 'http://motionsplan.dk/');
+        $this->Image(dirname(__FILE__) . '/vih_logo.jpg',155,270,45,0,'', 'http://vih.dk/');            
+        $this->SetFont('Helvetica', null, 8);
+        $this->setY(285);
+        $this->setX(6);
+        $this->MultiCell(50, 8, $this->url, 0, 'C');
+        $this->SetY(-15);
+        $this->SetFont('Helvetica', null, 12);        
+        $this->Cell(0,10, $this->PageNo().'/{nb}',0,0,'C');
+    }
+
+    function AddContent()
+    {
+        parent::AddPage();
+        $title = '  ' . $this->node->title;
+        $body = check_markup($this->node->body, $this->node->format, false);
+
+        $keywords = array();
+        if (!empty($this->node->taxonomy)) {
+            foreach ($this->node->taxonomy as $taxonomy) {
+                $keywords[] = $taxonomy->name;
+            }
+        }
+
+        if (!empty($this->node->field_article_image[0]['filepath'])) {
+            $presetname = 'SlideshowPicture';
+            $preset = imagecache_preset_by_name($presetname);
+            $src = $this->node->field_article_image[0]['filepath'];
+            $dst = imagecache_create_path($presetname, $src);
+            if (file_exists($dst) || imagecache_build_derivative($preset['actions'], $src, $dst)) {
+                $this->Image($dst,10,10,190,0,'', 'http://motionsplan.dk/');
+            }        
+        }
+        $this->Image(dirname(__FILE__) . '/cc-by-sa_340x340.png', 180, 13, 17, 0, '');
+    
+        $this->SetY(43);
+        $title_size = 15;
+        $this->SetFont('Helvetica', 'B', $title_size);
+        $this->SetTextColor(255, 255, 255);
+        $this->Cell(0, 17, $title, null, 2, 'L', true);
+    
+        $this->Ln(8);
+        $this->SetFont('Helvetica', 'N', 10);
+        $this->SetTextColor(0, 0, 0);
+        $this->writeHTML($body, true, false, true, false, '');        
+    }
+}
+
+/**
+ * Creates a pdf of an article node
+ * 
+ * @param $nid Node id
+ *
+ * @return void
+ */
+function article_pdf($node) {
+    global $base_url;
+
+    $title = $node->title;
+    $pdf = new ArticlePdf($node);
+    $pdf->SetTitle($title);
+    $pdf->SetSubject('');
+    $pdf->SetAuthor('Motionsplan.dk');
+    $pdf->AddContent();
+    $pdf->Output($title . '.pdf', 'I');
+}
+
 
 /**
  * Creates a pdf of an exercise node

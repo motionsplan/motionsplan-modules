@@ -53,7 +53,6 @@ function _motionsplan_exercise_display_embed($matches) {
       return;
   }
 
-  $output = '<div class="exercistlist">';
   $presetname = 'exercisePictureList';
   $preset = imagecache_preset_by_name($presetname);
 
@@ -62,8 +61,9 @@ function _motionsplan_exercise_display_embed($matches) {
     if (!$node) {
         continue;
     }  
- 
-    $output .= '<div class="exercise">';    
+    $output .= '<table>';    
+    $output .= '<tr>';
+    $output .= '<td width="20%">';    
     if (!empty($node->field_exercise_images[0]['filepath'])) {
       $src = $node->field_exercise_images[0]['filepath'];
       $dst = imagecache_create_path($presetname, $src);
@@ -72,10 +72,11 @@ function _motionsplan_exercise_display_embed($matches) {
         $output .= '<div class="photo"><a href="'.url('node/'.$node->nid).'"><img src="/'.$file.'" alt="" /></a></div>';
       }
     }
-    $output .= '<h2><a href="'. url('node/'.$node->nid) . '">'. check_plain($node->title) .'</a></h2>';
-    $output .= check_markup($node->field_exercise_intro[0]['value'], $node->format, false);
-    $output .= '</div><hr />';
+    $output .= '</td><td width="80%">';
+    $output .= '<strong><a href="'. url('node/'.$node->nid) . '">'. check_plain($node->title) .'</a></strong><br />';
+    $output .= strip_tags($node->field_exercise_intro[0]['value']);
+    $output .= '</td></tr>';    
+    $output .= '</table>';     
   }
-  $output .= '</div>';
   return $output;
 }
