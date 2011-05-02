@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * Implementation of hook_menu()
  */ 
@@ -125,12 +123,12 @@ function exerciseprogram_addToProgram_form() {
     
     $programs = array();
     while($r = db_fetch_array($res)) {
-	$addDesc = '';
-	if($r['uid_coach'] == $user->uid) {
-	    $extraUser = user_load($r['uid']);
-	    $addDesc = ' [Program til '.$extraUser->name.']';
-	}
-	$programs[$r['pid']] = $r['name'].$addDesc;
+	    $addDesc = '';
+	    if($r['uid_coach'] == $user->uid) {
+	        $extraUser = user_load($r['uid']);
+	        $addDesc = ' [Program til '.$extraUser->name.']';
+	    }
+	    $programs[$r['pid']] = $r['name'].$addDesc;
     }
     
     $form['pid'] = array(
@@ -202,10 +200,10 @@ function exerciseprogram_edit_access($pid) {
 
 function exerciseprogram_print_access($pid) {
     if(exerciseprogram_edit_access($pid) == true) {
-	return true;
+    	return true;
     }
     elseif(exerciseprogram_show_public_access($pid) == true) {
-	return true;
+    	return true;
     }
     return false;
 }
@@ -218,7 +216,7 @@ function exerciseprogram_create_access() {
 
 function exerciseprogram_show() {
     if(arg(3) == 'delete') {
-	exerciseprogram_delete_node(arg(2),arg(4));
+    	exerciseprogram_delete_node(arg(2),arg(4));
     }
     
     $nids = exerciseprogram_get_nids(arg(2));
@@ -230,7 +228,6 @@ function exerciseprogram_show() {
     $r = db_fetch_array(db_query($sql,arg(2)));
     
     drupal_set_title($r['name'].' - Træningsprogram');
-    
     
     $output = '';
     $output .= '<p>'.$r['description'].'</p>';
@@ -251,15 +248,12 @@ function exerciseprogram_show() {
     return $output;
 }
 
-
-
 function exerciseprogram_show_public() {
     
     $nids = exerciseprogram_get_nids(arg(2));
     $sql = "SELECT name, description FROM {exercise_program} WHERE pid = %d";
     $r = db_fetch_array(db_query($sql,arg(2)));
     drupal_set_title($r['name'].' - Træningsprogram');
-    
     
     $output = '';
     $output .= '<p>'.$r['description'].'</p>';
@@ -270,144 +264,12 @@ function exerciseprogram_show_public() {
     $output .= '</p>';
     
     foreach($nids as $eid) {
-	$r = db_result(db_query("SELECT COUNT(nid) FROM {node} WHERE status = 1 AND nid = %d",$eid));
-	if($r > 0) {
-	    $output .= node_view(node_load($eid),true,false,false);
-	}
+	    $r = db_result(db_query("SELECT COUNT(nid) FROM {node} WHERE status = 1 AND nid = %d",$eid));
+	    if($r > 0) {
+	        $output .= node_view(node_load($eid),true,false,false);
+	    }
     }
     return $output;
-}
-
-
-function exerciseprogram_print_compact() {
-    $nids = exerciseprogram_get_nids(arg(2));
-    if(sizeof($nids)<=0) {
-        return '<strong>Du skal tilføje øvelser for at kunne udskrive</strong>';
-    }
-    
-    $sql = "SELECT name, description FROM {exercise_program} WHERE pid = %d";
-    $r = db_fetch_array(db_query($sql,arg(2)));
-    
-    drupal_set_title($r['name']);
-    ?>
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-    <html xmlns="http://www.w3.org/1999/xhtml" lang="da" xml:lang="da">
-    <head>
-    <title><?php echo $r['name']; ?> | Motionsplan.dk</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <style type="text/css">
-        BODY {
-            background-color:#fff;
-            color:#000;
-            font-family:tahoma,verdana,helvetica,sans-serif;
-            font-size:70%;
-        }
-        H1, H2, H3, H4, H5 {
-            margin:0;
-        }
-        H1 {
-            font-size:1.5em;
-        }
-        H5 {
-            font-size:1.1em;
-            margin-top:10px;
-            font-weight:normal;
-        }
-        H2 {
-            margin-top:20px;
-            font-size:1.3em;
-        }
-        div.intro {
-            font-style: italic;
-            margin-top:10px;
-            margin-bottom:10px;
-        }
-        div.desc {
-            margin-bottom:10px;
-        }
-        H3 {
-            margin-top:20px;
-            margin-bottom:50px;
-        }
-    </style>
-    </head> 
-    <body>
-    <h1 style="float:left;width:50%;">
-        Træningsprogram: <?php echo $r['name']; ?>
-	</h1>
-	<div style="float:left;text-align:right;width:50%;">
-		Udskrevet fra motionsplan.dk den <?php echo date("j/n-y"); ?>
-	</div><div style="clear:both;"></div>
-	<br />
-	<p><?php echo $r['description']; ?></p>
-	<table border="1" width="100%" cellspacing="0" cellpadding="5">
-		<tr>
-			<th>Øvelse</th>
-			<th>Beskrivelse</th>
-			<th>Gentagelser</th>
-			<th>Styrke</th>
-			<th>Kommentar</th>
-		</tr>
-    <?php
-    foreach($nids as $no=>$eid) {
-        $e = node_load($eid);
-    ?>
-		<tr>
-			<td width="230">
-				<strong><?php echo $e->title; ?></strong><br />
-				<?php
-				$imgs = array();
-				foreach($e->field_exercise_images as $img) {
-					$imgs[] = str_replace('/files/','/files/imagecache/exercisePictureCompact/',$img['filepath']);
-				}
-				if(sizeof($imgs) > 3) {
-					$tmp_imgs = array();
-					$tmp_imgs[] = $imgs[0];
-					$tmp_imgs[] = $imgs[floor(sizeof($imgs)/2)];
-					$tmp_imgs[] = $imgs[sizeof($imgs)-1];
-					$imgs = $tmp_imgs;
-				}
-				?>
-				<?php
-				foreach($imgs as $img) { echo '<img src="'.url($img).'" alt="" /> '; }
-				?>
-				
-			</td>
-			<td width="20%">
-				<?php
-				echo $e->field_exercise_intro[0]['value'];
-				?>
-			</td>
-			<td width="10%" style="text-align:center;">
-				<strong>X</strong>
-			</td>
-			<td width="8%" style="text-align:right;">
-				RM
-			</td>
-			<td valign="top">
-				
-			</td>
-		</tr>
-		<!--
-            <?php
-	    
-	    
-            foreach($e->field_exercise_images as $img) {
-                $img = str_replace('/files/','/files/imagecache/exercisePicture/',$img['filepath']);
-                ?>
-                <img src="/<?php echo $img ?>" alt="" />
-                <?php
-            }
-            ?>
-        </div>
-		-->
-        <?php
-    }
-    ?>
-	</table>
-    </body>
-    </html>
-    <?php
 }
 
 function exerciseprogram_print() {
@@ -517,8 +379,8 @@ function exerciseprogram_get_list() {
     if(empty($user->uid)) {
         //user not logged in - tell the user about what we can do
         $output = '<p>Som registeret bruger på Motionsplan.dk har du mulighed 
-                for at oprette dine egne træningsprogrammerne. Træningsprogrammerne
-                opbygges ud fra de øvelserne vores eksperter har oprettet.</p>';
+                for at oprette dine egne træningsprogrammer. Træningsprogrammerne
+                opbygges ud fra de øvelser vores eksperter har oprettet.</p>';
         $output .= '<p>Du har altid mulighed for at udskrive programmerne i en
                 printervenlig udgave, du kan have med dig</p>';
         $output .= '<p><a href="'.url('user/register').'">Klik her for at oprette dig som bruger</a></p>';
@@ -537,52 +399,46 @@ function exerciseprogram_get_list() {
             }
         } </script>';
         $output .= '<p>Du kan redigere øvelser på dine træningsprogrammer herunder.</p>';
-        $output .= '<table><thead><tr>';
-        $output .= '<th>Træningsprogrammer</th>';
+        
+        $header = array();
+        $header[] = 'Træningsprogrammer';
         if(user_access('create programs for other')) {
-            $output .= '<th>Tilknyttet til bruger</th>';
+            $header[] = 'Tilknyttet til bruger';
         }
-        $output .= '<th>Antal øvelser</th>';
-        $output .= '<th>Handlinger</th>';
-        $output .= '</tr></thead>';
-        $i=0;
+        $header[] = 'Antal øvelser';
+        $header[] = 'Handlinger';
+
+        $rows = array();
+        $i = 0;
         foreach($list as $l) {
-            $i++; $c = 'even';
-            if($i%2!=0) { $c = 'odd'; }
-            
-            $output .= '<tbody><tr class="'.$c.'">';
-            $output .= '<td><a href="/exerciseprogram/show/'.$l['pid'].'">';
-            $output .= $l['name'].'</a><br /><small>'.$l['desc'].'</small></td>';
+            $rows[$i][] = '<a href="/exerciseprogram/show/'.$l['pid'].'">' . $l['name'].'</a><br /><small>'.$l['desc'].'</small>';
             if(user_access('create programs for other')) {
                 $extraText = 'dig selv';
                 if($l['public'] == 1) {
-		    $extraText = 'Offentligt';
-		}
-		else {
-		    if(!empty($l['uid_coach'])) {
-			//find out if we are showing it to the coach or to the user
-			if($l['uid_coach'] == $user->uid) {
-			    //we are showing it to the coache
-			    $sql = "SELECT uid, name FROM {users} WHERE uid = %d";
-			    $r = db_fetch_array(db_query($sql,$l['uid']));
-			    $extraText = l($r['name'],'user/'.$r['uid']);
-			}
-			else {
-			    $extraText = 'dig selv';
-			}
-		    }
-		}
-                $output .= '<td>'.$extraText.'</td>';
+		            $extraText = 'Offentligt';
+                }
+		        else {
+		            if(!empty($l['uid_coach'])) {
+			            //find out if we are showing it to the coach or to the user
+			            if($l['uid_coach'] == $user->uid) {
+			                //we are showing it to the coache
+			                $sql = "SELECT uid, name FROM {users} WHERE uid = %d";
+			                $r = db_fetch_array(db_query($sql,$l['uid']));
+			                $extraText = l($r['name'],'user/'.$r['uid']);
+			            }
+			            else {
+			                $extraText = 'dig selv';
+			            }
+		            }
+		        }
+                $rows[$i][] = $extraText;
             }
-            $output .= '<td>'.$l['exercises'].' øvelser</td>';
-            $output .= '<td>';
-            $output .= l('Rediger info','exerciseprogram/editinfo/'.$l['pid']);
-            //$output .= ' &nbsp; '.l('Rediger øvelser','exerciseprogram/edit/'.$l['pid']);
-            $output .= ' &nbsp; <a href="javascript:deleteExerciseProgram(\''.$l['pid'].'\')">Slet</a></td>';
-            $output .= '</tr></tbody>';
+            $rows[$i][] = $l['exercises'].' øvelser';
+            $rows[$i][] = l('Rediger info','exerciseprogram/editinfo/'.$l['pid']) . ' <a href="javascript:deleteExerciseProgram(\''.$l['pid'].'\')">Slet</a>';
+            $i++;
         }
-        $output .= '</tbody></table>';
     }
+    $output .= theme_table($header, $rows);
     $output .= '<h1 class="title">Opret nyt træningsprogram</h1>';
     $output .= drupal_get_form('exerciseprogram_add_form');
     return $output;
@@ -597,34 +453,29 @@ function exerciseprogram_get_public_list() {
                     WHERE e.pid = '".$r['pid']."' AND n.nid = e.nid AND n.status = 1 AND n.type = 'exercise'";
         $noe = db_result(db_query($sql));
             
-        $list[] = array('name'=>$r['name'],'desc'=>$r['descr'],
-                                    'pid'=>$r['pid'],'exercises'=>$noe,
-                                    'uid'=>$r['uid']);
+        $list[] = array(
+            'name'=>$r['name'],
+            'desc'=>$r['descr'],
+            'pid'=>$r['pid'],
+            'exercises'=>$noe,
+            'uid'=>$r['uid']);
     }
     
     $output .= '<p>Se motionsplan.dk offentlige træningsprogrammer herunder.</p>';
-    $output .= '<table><thead><tr>';
-    $output .= '<th>Træningsprogrammer</th>';
-    $output .= '<th>Antal øvelser</th>';
-    $output .= '<th>Oprettet af</th>';
-    $output .= '</tr></thead>';
-    $i=0;
-    foreach($list as $l) {
-        $i++; $c = 'even';
-        if($i%2!=0) { $c = 'odd'; }
-            
-        $output .= '<tbody><tr class="'.$c.'">';
-        $output .= '<td><a href="/exerciseprogram/showpublic/'.$l['pid'].'">';
-        $output .= $l['name'].'</a><br /><small>'.$l['desc'].'</small></td>';
-        $output .= '<td>'.$l['exercises'].' øvelser</td>';
-        $output .= '<td>';
-	$uuser = user_load($l['uid']);
-        $output .= l($uuser->name,'user/'.$uuser->uid);
-        $output .= '</tr></tbody>';
-    }
-    $output .= '</tbody></table>';
+
+    $header = array('Træningsprogrammer', 'Antal øvelser', 'Oprettet af');
+    $rows = array();
     
-    return $output;
+    foreach($list as $l) {
+    	$uuser = user_load($l['uid']);
+        $rows[] = array(
+            '<a href="'.'/exerciseprogram/showpublic/'.$l['pid'].'">' . check_plain($l['name']) . '<br /><small>'.check_plain($l['desc']).'</small>' . "</a>", 
+            $l['exercises'] . ' øvelser', 
+            l($uuser->name,'user/'.$uuser->uid)
+        );
+    }
+    
+    return $output . theme_table($header, $rows, $attributes = array(), $caption = NULL);
 }
 
 function exerciseprogram_editinfo_program($nid) {
@@ -638,7 +489,6 @@ function exerciseprogram_get_users_exercises() {
     global $user;
     $exerciseList = array();
     if($user->uid) {
-        
         $sql = "SELECT pid, name, description as descr, uid, uid_coach, public FROM {exercise_program}
             WHERE uid = '".$user->uid."' OR uid_coach = '".$user->uid."' ORDER BY name";
         $res = db_query($sql);
@@ -647,9 +497,14 @@ function exerciseprogram_get_users_exercises() {
                     WHERE e.pid = '".$r['pid']."' AND n.nid = e.nid AND n.status = 1 AND n.type = 'exercise'";
             $noe = db_result(db_query($sql));
             
-            $exerciseList[] = array('name'=>$r['name'],'desc'=>$r['descr'],
-                                    'pid'=>$r['pid'],'exercises'=>$noe,
-                                    'uid_coach'=>$r['uid_coach'],'uid'=>$r['uid'],'public'=>$r['public']);
+            $exerciseList[] = array(
+                'name' => $r['name'],
+                'desc' => $r['descr'],
+                'pid' => $r['pid'],
+                'exercises' => $noe,
+                'uid_coach' => $r['uid_coach'],
+                'uid' => $r['uid'],
+                'public' => $r['public']);
         }
         
     } 
@@ -667,7 +522,6 @@ function exerciseprogram_autocomplete($s) {
     drupal_json($matches);
     exit; //in case of Devel module or something
 }
-
 
 function exerciseprogram_add_form() {
     $r = array();
@@ -762,7 +616,6 @@ function exerciseprogram_add_form_submit($form, &$form_state) {
         if($tuid<=0) {
             $tuid='';
         }
-	
     }
     
     $public = 0;
@@ -869,8 +722,7 @@ function exerciseprogram_edit_program($pid,$tid='',$action='',$info=null) {
     }
     $output .= '</strong></p>';
     
-    // class="tagadelic level1" rel="tag"
-    $output .= theme('exerciseprogram_weighted_tags',tagadelic_sort_tags(tagadelic_get_weighted_tags(array(1))));
+    $output .= theme('exerciseprogram_weighted_tags', tagadelic_sort_tags(tagadelic_get_weighted_tags(array(1))));
     
     if(empty($tid)) {
         $output .= '<p><h2 class="title">Vælg et nøgleord ovenfor, for at tilføje øvelser</h2></p>';
@@ -906,7 +758,6 @@ function exerciseprogram_get_nids($pid) {
     while($r = db_fetch_array($res)) { $nids[] = $r['nid']; }
     return $nids;
 }
-
 
 function theme_exerciseprogram_weighted_tags($terms) {
     $output = '<div style="border-top:1px solid #d6ddb9;border-bottom:1px solid #d6ddb9">';
