@@ -309,7 +309,7 @@ class ExerciseAdvancedPdfPortrait extends TCPDF
         $this->setX(70);
         $this->MultiCell(0, 6, str_replace("\n",' ',$description), 0, 'L', false, 1, '', '', true, 0, true);
 
-        $this->Image(dirname(__FILE__) . '/../../../themes/exercise/logo.png',8,270,50,0,'', 'http://motionsplan.dk/');
+        $this->Image(dirname(__FILE__) . '/mp-logo.png',8,270,50,0,'', 'http://motionsplan.dk/');
         $this->Image(dirname(__FILE__) . '/vih_logo.jpg',80,268,45,0,'', 'http://motionsplan.dk/');        
         $this->Image(dirname(__FILE__) . '/cc-by-sa_340x340.png',190,3,17,0,'');
 
@@ -453,7 +453,7 @@ class ExercisePdfPortrait extends FPDF
 
         $this->MultiCell(0, 8, $description, 0);
 
-        $this->Image(dirname(__FILE__) . '/../../../themes/motionsplan/logo.png',8,270,50,0,'', 'http://motionsplan.dk/');
+        $this->Image(dirname(__FILE__) . '/mp-logo.png',8,270,50,0,'', 'http://motionsplan.dk/');
         $this->Image(dirname(__FILE__) . '/vih_logo.jpg',80,268,45,0,'', 'http://motionsplan.dk/');        
         $this->Image(dirname(__FILE__) . '/cc-by-sa_340x340.png',190,3,17,0,'');
 
@@ -565,7 +565,7 @@ class ExercisePdfLandscape extends FPDF
         $this->Line(220, 30, 220, 220);
     
         $this->Image(dirname(__FILE__) . '/vih_logo.jpg',240,120,32,0,'', 'http://vih.dk/');
-        $this->Image(dirname(__FILE__) . '/../../../themes/motionsplan/logo.png',235,180,50,0,'', 'http://motionsplan.dk/');
+        $this->Image(dirname(__FILE__) . '/mp-logo.png',235,180,50,0,'', 'http://motionsplan.dk/');
 
         $this->Image(dirname(__FILE__) . '/cc-by-sa_340x340.png',12,12,17,0,'');
 
@@ -628,7 +628,7 @@ class ArticlePdf extends TCPDF
     
     function Footer()
     {
-        $this->Image(dirname(__FILE__) . '/../../../themes/motionsplan/logo.png',8,275,50,0,'', 'http://motionsplan.dk/');
+        $this->Image(dirname(__FILE__) . '/mp-logo.png',8,275,50,0,'', 'http://motionsplan.dk/');
         $this->Image(dirname(__FILE__) . '/vih_logo.jpg',155,270,45,0,'', 'http://vih.dk/');            
         $this->SetFont('Helvetica', null, 8);
         $this->setY(285);
@@ -794,7 +794,7 @@ function exerciseprogram_print_compact_pdf() {
     $pdf->AddPage();
     $pdf->SetFont('Helvetica', 'B', 20);
     $pdf->Cell(0, 10, $title, null, 2, 'L', false);
-    $pdf->Image(dirname(__FILE__) . '/../../../themes/motionsplan/logo.png',150,8,50,0,'', 'http://motionsplan.dk/');
+    $pdf->Image(dirname(__FILE__) . '/mp-logo.png',150,8,50,0,'', 'http://motionsplan.dk/');
     $pdf->setTextColor(0, 0, 0);
 
     $pdf->SetFont('Helvetica', null, 10);
