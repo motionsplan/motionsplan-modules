@@ -333,11 +333,11 @@ class ExerciseAdvancedPdfPortrait extends TCPDF
 
         curl_close($ch);
 
-        $f = fopen(dirname(__FILE__) . '/barcodes/'. md5(request_uri()) . '.png', 'w');
+        $f = fopen(file_directory_path() . '/barcodes/'. md5(request_uri()) . '.png', 'w');
         fwrite($f, $image);
         fclose($f);
 
-        $this->Image(dirname(__FILE__) . '/barcodes/' . md5(request_uri()) . '.png', 160, 245, 45, 0, '');
+        $this->Image(file_directory_path() . '/barcodes/' . md5(request_uri()) . '.png', 160, 245, 45, 0, '');
     }
 }
 
@@ -477,11 +477,11 @@ class ExercisePdfPortrait extends FPDF
 
         curl_close($ch);
 
-        $f = fopen(dirname(__FILE__) . '/barcodes/'. md5(request_uri()) . '.png', 'w');
+        $f = fopen(file_directory_path() . '/barcodes/'. md5(request_uri()) . '.png', 'w');
         fwrite($f, $image);
         fclose($f);
 
-        $this->Image(dirname(__FILE__) . '/barcodes/' . md5(request_uri()) . '.png', 160, 245, 45, 0, '');
+        $this->Image(file_directory_path() . '/barcodes/' . md5(request_uri()) . '.png', 160, 245, 45, 0, '');
     }
 }
 
@@ -597,11 +597,11 @@ class ExercisePdfLandscape extends FPDF
     
         curl_close($ch);
     
-        $f = fopen(dirname(__FILE__) . '/barcodes/'. md5(request_uri()) . '.png', 'w');
+        $f = fopen(file_directory_path() . '/barcodes/'. md5(request_uri()) . '.png', 'w');
         fwrite($f, $image);
         fclose($f);
     
-        $this->Image(dirname(__FILE__) . '/barcodes/' . md5(request_uri()) . '.png', 235, 135, 45, 0, '');
+        $this->Image(file_directory_path() . '/barcodes/' . md5(request_uri()) . '.png', 235, 135, 45, 0, '');
     }
 }
 
