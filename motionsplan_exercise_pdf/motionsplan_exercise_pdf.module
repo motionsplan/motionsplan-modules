@@ -1,6 +1,6 @@
 <?php
-require_once libraries_get_path('fpdf') . '/src/fpdf.php';
-require_once libraries_get_path('tcpdf') . '/tcpdf.php';
+require_once dirname(__FILE__) . '/../../../libraries/fpdf/fpdf.php';
+require_once dirname(__FILE__) . '/../../../libraries/tcpdf/tcpdf.php';
 
 /**
  * Implementation of hook_menu()
