@@ -29,6 +29,34 @@ function motionsplan_exercise_imagecache_default_presets() {
         ),
       ),
     ),
+    'exercisePictureCompact' => array(
+      'presetname' => 'exercisePictureCompact',
+      'actions' => array(
+        '0' => array(
+          'weight' => '0',
+          'module' => 'imagecache',
+          'action' => 'imagecache_scale_and_crop',
+          'data' => array(
+            'width' => '70',
+            'height' => '70',
+          ),
+        ),
+      ),
+    ),
+    'exercisePictureList' => array(
+      'presetname' => 'exercisePictureList',
+      'actions' => array(
+        '0' => array(
+          'weight' => '0',
+          'module' => 'imagecache',
+          'action' => 'imagecache_scale_and_crop',
+          'data' => array(
+            'width' => '80',
+            'height' => '80',
+          ),
+        ),
+      ),
+    ),
   );
   return $items;
 }
