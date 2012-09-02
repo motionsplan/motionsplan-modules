@@ -11,9 +11,10 @@ function motionsplan_exercise_content_default_fields() {
     'field_name' => 'field_alternative_titles',
     'type_name' => 'exercise',
     'display_settings' => array(
+      'weight' => '-4',
+      'parent' => '',
       'label' => array(
         'format' => 'above',
-        'exclude' => 0,
       ),
       'teaser' => array(
         'format' => 'default',
@@ -73,7 +74,7 @@ function motionsplan_exercise_content_default_fields() {
     'field_name' => 'field_exercise_guide',
     'type_name' => 'exercise',
     'display_settings' => array(
-      'weight' => '-3',
+      'weight' => '-1',
       'parent' => '',
       'label' => array(
         'format' => 'above',
@@ -116,7 +117,7 @@ function motionsplan_exercise_content_default_fields() {
       ),
       'default_value_php' => NULL,
       'label' => 'Beskrivelse af øvelsen',
-      'weight' => '-2',
+      'weight' => '-1',
       'description' => 'En længere og mere præcis beskrivelse af øvelsen. Skal indeholde information om hvorledes øvelsen foregår, hvilke steps den sker i og ligende.',
       'type' => 'text_textarea',
       'module' => 'text',
@@ -131,7 +132,7 @@ function motionsplan_exercise_content_default_fields() {
       'weight' => '-2',
       'parent' => '',
       'label' => array(
-        'format' => 'above',
+        'format' => 'hidden',
       ),
       'teaser' => array(
         'format' => 'hidden',
@@ -172,7 +173,7 @@ function motionsplan_exercise_content_default_fields() {
       'title' => '',
       'custom_title' => 0,
       'label' => 'Billeder af øvelsen',
-      'weight' => 0,
+      'weight' => '-2',
       'description' => 'Upload billeder til øvelsen',
       'type' => 'imagefield_widget',
       'module' => 'imagefield',
@@ -184,7 +185,7 @@ function motionsplan_exercise_content_default_fields() {
     'field_name' => 'field_exercise_intro',
     'type_name' => 'exercise',
     'display_settings' => array(
-      'weight' => '-4',
+      'weight' => '-3',
       'parent' => '',
       'label' => array(
         'format' => 'above',
@@ -239,9 +240,10 @@ function motionsplan_exercise_content_default_fields() {
     'field_name' => 'field_exercise_videos',
     'type_name' => 'exercise',
     'display_settings' => array(
+      'weight' => '2',
+      'parent' => '',
       'label' => array(
         'format' => 'above',
-        'exclude' => 0,
       ),
       'teaser' => array(
         'format' => 'default',

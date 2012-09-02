@@ -11,10 +11,9 @@ function motionsplan_exercise_views_default_views() {
   $view->name = 'exercise_list';
   $view->description = 'Alle træningsøvelser';
   $view->tag = '';
-  $view->view_php = '';
   $view->base_table = 'node';
-  $view->is_cacheable = FALSE;
-  $view->api_version = 2;
+  $view->core = 0;
+  $view->api_version = '2';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->override_option('fields', array(
@@ -79,6 +78,11 @@ function motionsplan_exercise_views_default_views() {
       'field' => 'title',
       'relationship' => 'none',
     ),
+    'changed' => array(
+      'id' => 'changed',
+      'table' => 'node',
+      'field' => 'changed',
+    ),
   ));
   $handler->override_option('filters', array(
     'type' => array(
@@ -111,6 +115,29 @@ function motionsplan_exercise_views_default_views() {
       'field' => 'status',
       'relationship' => 'none',
     ),
+    'tid' => array(
+      'operator' => 'or',
+      'value' => array(),
+      'group' => '0',
+      'exposed' => TRUE,
+      'expose' => array(
+        'use_operator' => FALSE,
+        'operator' => 'tid_op',
+        'identifier' => 'tid',
+        'label' => 'Taksonomi: Term',
+        'remember' => FALSE,
+        'single' => TRUE,
+        'optional' => TRUE,
+        'reduce' => FALSE,
+      ),
+      'type' => 'select',
+      'limit' => TRUE,
+      'vid' => '4',
+      'id' => 'tid',
+      'table' => 'term_node',
+      'field' => 'tid',
+      'hierarchy' => 0,
+    ),
   ));
   $handler->override_option('access', array(
     'type' => 'none',
@@ -131,6 +158,171 @@ function motionsplan_exercise_views_default_views() {
     'comments' => 0,
   ));
   $handler = $view->new_display('page', 'Side', 'page_1');
+  $handler->override_option('filters', array(
+    'type' => array(
+      'operator' => 'in',
+      'value' => array(
+        'exercise' => 'exercise',
+      ),
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'type',
+      'table' => 'node',
+      'field' => 'type',
+      'relationship' => 'none',
+    ),
+    'status' => array(
+      'operator' => '=',
+      'value' => 1,
+      'group' => '0',
+      'exposed' => FALSE,
+      'expose' => array(
+        'operator' => FALSE,
+        'label' => '',
+      ),
+      'id' => 'status',
+      'table' => 'node',
+      'field' => 'status',
+      'relationship' => 'none',
+    ),
+    'keys' => array(
+      'operator' => 'required',
+      'value' => '',
+      'group' => '0',
+      'exposed' => TRUE,
+      'expose' => array(
+        'use_operator' => 0,
+        'operator' => 'keys_op',
+        'identifier' => 'keys',
+        'label' => 'Søg',
+        'optional' => 1,
+        'remember' => 0,
+      ),
+      'id' => 'keys',
+      'table' => 'search_index',
+      'field' => 'keys',
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+    ),
+    'tid' => array(
+      'operator' => 'or',
+      'value' => array(),
+      'group' => '0',
+      'exposed' => TRUE,
+      'expose' => array(
+        'use_operator' => 0,
+        'operator' => 'tid_op',
+        'identifier' => 'tid',
+        'label' => 'Muskelgruppe',
+        'optional' => 1,
+        'single' => 1,
+        'remember' => 0,
+        'reduce' => 0,
+      ),
+      'type' => 'select',
+      'limit' => TRUE,
+      'vid' => '4',
+      'id' => 'tid',
+      'table' => 'term_node',
+      'field' => 'tid',
+      'hierarchy' => 0,
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+      'reduce_duplicates' => 1,
+    ),
+    'tid_1' => array(
+      'operator' => 'or',
+      'value' => array(),
+      'group' => '0',
+      'exposed' => TRUE,
+      'expose' => array(
+        'use_operator' => 0,
+        'operator' => 'tid_1_op',
+        'identifier' => 'tid_1',
+        'label' => 'Redskaber',
+        'optional' => 1,
+        'single' => 1,
+        'remember' => 0,
+        'reduce' => 0,
+      ),
+      'type' => 'select',
+      'limit' => TRUE,
+      'vid' => '3',
+      'id' => 'tid_1',
+      'table' => 'term_node',
+      'field' => 'tid',
+      'hierarchy' => 0,
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+      'reduce_duplicates' => 1,
+    ),
+    'tid_2' => array(
+      'operator' => 'or',
+      'value' => array(),
+      'group' => '0',
+      'exposed' => TRUE,
+      'expose' => array(
+        'use_operator' => 0,
+        'operator' => 'tid_2_op',
+        'identifier' => 'tid_2',
+        'label' => 'Muskler',
+        'optional' => 1,
+        'single' => 1,
+        'remember' => 0,
+        'reduce' => 0,
+      ),
+      'type' => 'select',
+      'limit' => TRUE,
+      'vid' => '5',
+      'id' => 'tid_2',
+      'table' => 'term_node',
+      'field' => 'tid',
+      'hierarchy' => 0,
+      'override' => array(
+        'button' => 'Use default',
+      ),
+      'relationship' => 'none',
+      'reduce_duplicates' => 1,
+    ),
+    'tid_3' => array(
+      'operator' => 'or',
+      'value' => array(),
+      'group' => '0',
+      'exposed' => TRUE,
+      'expose' => array(
+        'use_operator' => 0,
+        'operator' => 'tid_3_op',
+        'identifier' => 'tid_3',
+        'label' => 'Tag',
+        'optional' => 1,
+        'single' => 1,
+        'remember' => 0,
+        'reduce' => 0,
+      ),
+      'type' => 'select',
+      'limit' => TRUE,
+      'vid' => '1',
+      'id' => 'tid_3',
+      'table' => 'term_node',
+      'field' => 'tid',
+      'hierarchy' => 0,
+      'override' => array(
+        'button' => 'Brug standard',
+      ),
+      'relationship' => 'none',
+      'reduce_duplicates' => 1,
+    ),
+  ));
   $handler->override_option('path', 'exercise_list');
   $handler->override_option('menu', array(
     'type' => 'none',
@@ -144,7 +336,84 @@ function motionsplan_exercise_views_default_views() {
     'title' => '',
     'description' => '',
     'weight' => 0,
+    'name' => 'navigation',
   ));
+  $handler = $view->new_display('block', 'Blok', 'block_1');
+  $handler->override_option('sorts', array(
+    'changed' => array(
+      'order' => 'DESC',
+      'granularity' => 'second',
+      'id' => 'changed',
+      'table' => 'node',
+      'field' => 'changed',
+      'override' => array(
+        'button' => 'Brug standard',
+      ),
+      'relationship' => 'none',
+    ),
+    'title' => array(
+      'order' => 'ASC',
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('title', 'Senest opdaterede træningsøvelser');
+  $handler->override_option('items_per_page', 5);
+  $handler->override_option('use_pager', '0');
+  $handler->override_option('block_description', '');
+  $handler->override_option('block_caching', -1);
+  $handler = $view->new_display('block', 'Explorer', 'block_2');
+  $handler->override_option('fields', array(
+    'field_exercise_images_fid' => array(
+      'label' => '',
+      'link_to_node' => 0,
+      'label_type' => 'none',
+      'format' => 'exercisePictureList_default',
+      'multiple' => array(
+        'group' => 1,
+        'multiple_number' => '1',
+        'multiple_from' => '1',
+        'multiple_reversed' => 0,
+      ),
+      'exclude' => 0,
+      'id' => 'field_exercise_images_fid',
+      'table' => 'node_data_field_exercise_images',
+      'field' => 'field_exercise_images_fid',
+      'relationship' => 'none',
+    ),
+    'title' => array(
+      'label' => '',
+      'link_to_node' => 1,
+      'exclude' => 0,
+      'id' => 'title',
+      'table' => 'node',
+      'field' => 'title',
+      'relationship' => 'none',
+    ),
+    'field_exercise_intro_value' => array(
+      'label' => '',
+      'link_to_node' => 0,
+      'label_type' => 'none',
+      'format' => 'plain',
+      'multiple' => array(
+        'group' => TRUE,
+        'multiple_number' => '',
+        'multiple_from' => '',
+        'multiple_reversed' => FALSE,
+      ),
+      'exclude' => 0,
+      'id' => 'field_exercise_intro_value',
+      'table' => 'node_data_field_exercise_intro',
+      'field' => 'field_exercise_intro_value',
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('style_plugin', 'table_selectable');
+  $handler->override_option('style_options', array());
+  $handler->override_option('block_description', '');
+  $handler->override_option('block_caching', -1);
 
   $views[$view->name] = $view;
 
@@ -153,10 +422,9 @@ function motionsplan_exercise_views_default_views() {
   $view->name = 'exercise_list_chooser';
   $view->description = '';
   $view->tag = '';
-  $view->view_php = '';
   $view->base_table = 'node';
-  $view->is_cacheable = FALSE;
-  $view->api_version = 2;
+  $view->core = 0;
+  $view->api_version = '2';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->override_option('fields', array(
@@ -267,6 +535,7 @@ function motionsplan_exercise_views_default_views() {
     'title' => '',
     'description' => '',
     'weight' => 0,
+    'name' => 'navigation',
   ));
 
   $views[$view->name] = $view;
@@ -276,10 +545,9 @@ function motionsplan_exercise_views_default_views() {
   $view->name = 'exercise_list_program';
   $view->description = '';
   $view->tag = '';
-  $view->view_php = '';
   $view->base_table = 'node';
-  $view->is_cacheable = FALSE;
-  $view->api_version = 2;
+  $view->core = 0;
+  $view->api_version = '2';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->override_option('fields', array(
@@ -334,8 +602,8 @@ function motionsplan_exercise_views_default_views() {
       'validate_argument_node_access' => 0,
       'validate_argument_nid_type' => 'nid',
       'validate_argument_vocabulary' => array(
-        '1' => 0,
-        '2' => 0,
+        1 => 0,
+        2 => 0,
       ),
       'validate_argument_type' => 'tid',
       'validate_argument_php' => '',
@@ -387,10 +655,9 @@ function motionsplan_exercise_views_default_views() {
   $view->name = 'flag_exercises';
   $view->description = 'A page listing the current user\'s flagged exercises at /favorites.';
   $view->tag = 'flag';
-  $view->view_php = '';
   $view->base_table = 'node';
-  $view->is_cacheable = FALSE;
-  $view->api_version = 2;
+  $view->core = 0;
+  $view->api_version = '2';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
   $handler = $view->new_display('default', 'Defaults', 'default');
   $handler->override_option('relationships', array(
@@ -468,14 +735,14 @@ function motionsplan_exercise_views_default_views() {
   $handler->override_option('access', array(
     'type' => 'role',
     'role' => array(
-      '2' => '2',
+      2 => '2',
     ),
     'perm' => '',
   ));
   $handler->override_option('cache', array(
     'type' => 'none',
   ));
-  $handler->override_option('title', 'My bookmarks');
+  $handler->override_option('title', 'Mine bogmærker');
   $handler->override_option('empty', 'You have not yet bookmarked any content. Click the "Bookmark this" link when viewing a piece of content to add it to this list.');
   $handler->override_option('items_per_page', '25');
   $handler->override_option('use_pager', TRUE);
@@ -526,6 +793,7 @@ function motionsplan_exercise_views_default_views() {
     'title' => NULL,
     'description' => '',
     'weight' => NULL,
+    'name' => 'navigation',
   ));
   $handler = $view->new_display('page', 'Side', 'page_1');
   $handler->override_option('path', 'favorites');
@@ -541,6 +809,7 @@ function motionsplan_exercise_views_default_views() {
     'title' => '',
     'description' => '',
     'weight' => 0,
+    'name' => 'navigation',
   ));
 
   $views[$view->name] = $view;
